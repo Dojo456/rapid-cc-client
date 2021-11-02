@@ -4,7 +4,7 @@ import { Calendar } from './calendar/calendar';
 function App() {
   return (
     <div className="App">
-      <div className='calendar' style={{width: "70%", backgroundColor: 'lightgray'}}>
+      <div className='calendar' style={{width: "70%", height: "90%", overflow:'hidden'}}>
         <Calendar/>
       </div>  
     </div>

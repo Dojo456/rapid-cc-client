@@ -2,8 +2,9 @@ import React, { CSSProperties } from "react"
 import { CalendarEvent } from "../models/event";
 import { CalendarDate } from "./date";
 
-const calendarDayStyle: CSSProperties = {
+const calendarDayWeekStyle: CSSProperties = {
     width: "calc(100% / 7)",
+    height: "minimize-content",
     backgroundColor: "white",
     display: "inline-block"
 }
@@ -11,33 +12,93 @@ const calendarDayStyle: CSSProperties = {
 export class Calendar extends React.Component {
     render() {
         return (
-        <div>
-            <div>
-                <b style = {calendarDayStyle}>Su</b>
-                <b style = {calendarDayStyle}>Mo</b>
-                <b style = {calendarDayStyle}>Tu</b>
-                <b style = {calendarDayStyle}>We</b>
-                <b style = {calendarDayStyle}>Th</b>
-                <b style = {calendarDayStyle}>Fr</b>
-                <b style = {calendarDayStyle}>Sa</b>
-            </div>
-            <div>
-                {monthDays()}
-            </div>
+        <div style={{ width: "100%", height: "100%", backgroundColor:"lightgray", overflow: "hidden" }}>
+            {renderCalenderDays()}
         </div>
         );
     }
 }
 
-function monthDays() {
-    const days = []
-
-    for (let i = 0; i < 30; i++) {
-        days.push( 
-        <b style={calendarDayStyle}>
-            <CalendarDate date = {new Date()} events = {[{label: "new event", attendees: [], inPerson: true}]}/>
-        </b>)
+function renderCalenderDays() {
+    const events: { [index:number] : CalendarEvent[] } = {
+        11: [{
+            label: "yeah",
+            attendees: [],
+            inPerson: true
+        }]
     }
 
-    return days;
+    const date = new Date();
+    const daysPrevMonth = getLeadingDays(date);
+    const daysThisMonth = getMonthDays(date);
+    const daysNextMonth = getTrailingDays(date, daysPrevMonth, daysThisMonth);
+
+    const allDays = daysPrevMonth.concat(daysThisMonth).concat(daysNextMonth);
+
+    const weeks: JSX.Element[] = [];
+
+    for (let i = 0; i < 5; i++) {
+        const weekDays: JSX.Element[] = []
+
+        for (let j = 0; j < 7; j++) {
+            const index = (i * 7) + j;
+
+            weekDays.push(
+                <td style={{ backgroundColor:"white" }}>
+                    <CalendarDate date={allDays[index]} events={[]}></CalendarDate>
+                </td>
+            )
+        }
+
+        weeks.push(
+            <tr>
+                {weekDays}
+            </tr>
+        )
+    }
+
+    return (
+        <table style={{ width:"95%", height:"95%", tableLayout:"fixed", margin:"auto" }}>
+            <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+            </tr>
+            {weeks}
+        </table>
+    );
+}
+
+function getLeadingDays(date: Date, staDay = 0) { // 0: sunday
+    const ret = [];
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const days = (firstWeekday + 7) - (staDay +7) - 1;
+    for (let i = days * -1; i <= 0; i++) {
+        ret.push(new Date(year, month, i));
+    }
+    return ret;
+}
+
+function getMonthDays(date: Date) {
+    const ret = [];
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const lastDay = new Date(year, month+1, 0).getDate();
+    for (let i = 1; i <= lastDay; i++) ret.push(new Date(year, month, i));
+    return ret;
+}
+
+function getTrailingDays(date: Date, leadingDays: Date[], monthDays: Date[]) {
+    const ret = [];
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const days = 42 - (leadingDays.length + monthDays.length);
+    for (let i = 1; i <= days; i++) ret.push(new Date(year, month, i));
+    return ret;
 }

@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import React from "react";
 import { CalendarEvent } from "../models/event";
 
@@ -9,9 +10,9 @@ interface DateProps {
 export class CalendarDate extends React.Component<DateProps> {
     render() {
         return (
-            <div>
-                <h1>{this.props.date.getDay()}</h1>
-                <ul>
+            <div style={{ overflow:"hidden", width:"100%", height:"100%" }}>
+                <p style={{ margin:"0", height:"35%" }}>{this.props.date.getDate()}</p>
+                <ul style={{overflow:"auto", height:"65%", listStyle:"none", padding:0, margin:0 }}>
                     {this.props.events.map((event) => {
                         const color = event.inPerson ? "lightcoral" : "lightblue"
                         return (
