@@ -11,6 +11,5 @@ body
 
 html, body, #root, .App
 {
-    display: contents;
     height: 100%;
 }

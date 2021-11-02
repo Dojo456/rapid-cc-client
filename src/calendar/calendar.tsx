@@ -1,13 +1,5 @@
 import React, { CSSProperties } from "react"
-import { CalendarEvent } from "../models/event";
 import { CalendarDate } from "./date";
-
-const calendarDayWeekStyle: CSSProperties = {
-    width: "calc(100% / 7)",
-    height: "minimize-content",
-    backgroundColor: "white",
-    display: "inline-block"
-}
 
 export class Calendar extends React.Component {
     render() {
@@ -20,18 +12,10 @@ export class Calendar extends React.Component {
 }
 
 function renderCalenderDays() {
-    const events: { [index:number] : CalendarEvent[] } = {
-        11: [{
-            label: "yeah",
-            attendees: [],
-            inPerson: true
-        }]
-    }
-
-    const date = new Date();
-    const daysPrevMonth = getLeadingDays(date);
-    const daysThisMonth = getMonthDays(date);
-    const daysNextMonth = getTrailingDays(date, daysPrevMonth, daysThisMonth);
+    const today = new Date();
+    const daysPrevMonth = getLeadingDays(today);
+    const daysThisMonth = getMonthDays(today);
+    const daysNextMonth = getTrailingDays(today, daysPrevMonth, daysThisMonth);
 
     const allDays = daysPrevMonth.concat(daysThisMonth).concat(daysNextMonth);
 
@@ -42,10 +26,11 @@ function renderCalenderDays() {
 
         for (let j = 0; j < 7; j++) {
             const index = (i * 7) + j;
+            const day = allDays[index];
 
             weekDays.push(
                 <td style={{ backgroundColor:"white" }}>
-                    <CalendarDate date={allDays[index]} events={[]}></CalendarDate>
+                    <CalendarDate date={day}></CalendarDate>
                 </td>
             )
         }
@@ -57,22 +42,27 @@ function renderCalenderDays() {
         )
     }
 
+    const weekDayStyle: CSSProperties = {
+        overflow: "hidden"
+    }
+
     return (
         <table style={{ width:"95%", height:"95%", tableLayout:"fixed", margin:"auto" }}>
-            <tr>
-                <th>Sunday</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-                <th>Saturday</th>
+            <tr style={{ height:"5%" }}>
+                <th style={weekDayStyle}>Sunday</th>
+                <th style={weekDayStyle}>Monday</th>
+                <th style={weekDayStyle}>Tuesday</th>
+                <th style={weekDayStyle}>Wednesday</th>
+                <th style={weekDayStyle}>Thursday</th>
+                <th style={weekDayStyle}>Friday</th>
+                <th style={weekDayStyle}>Saturday</th>
             </tr>
             {weeks}
         </table>
     );
 }
 
+// Following three functions are taken from https://medium.com/allenhwkim/how-to-build-a-calendar-widget-7cf397fe3de5
 function getLeadingDays(date: Date, staDay = 0) { // 0: sunday
     const ret = [];
     const year = date.getFullYear();

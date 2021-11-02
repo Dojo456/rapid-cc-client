@@ -1,0 +1,8 @@
+{
+    "events": [{
+        "date": "2021-11-02T22:15:00Z",
+        "label": "today",
+        "attendees": [],
+        "inPerson": false
+    }]
+}
