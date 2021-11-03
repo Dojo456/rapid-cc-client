@@ -29,14 +29,14 @@ function renderCalenderDays() {
             const day = allDays[index];
 
             weekDays.push(
-                <td style={{ backgroundColor:"white" }}>
+                <td key={j} style={{ backgroundColor:"white" }}>
                     <CalendarDate date={day}></CalendarDate>
                 </td>
             )
         }
 
         weeks.push(
-            <tr>
+            <tr key={i}>
                 {weekDays}
             </tr>
         )
@@ -48,16 +48,20 @@ function renderCalenderDays() {
 
     return (
         <table style={{ width:"95%", height:"95%", tableLayout:"fixed", margin:"auto" }}>
-            <tr style={{ height:"5%" }}>
-                <th style={weekDayStyle}>Sunday</th>
-                <th style={weekDayStyle}>Monday</th>
-                <th style={weekDayStyle}>Tuesday</th>
-                <th style={weekDayStyle}>Wednesday</th>
-                <th style={weekDayStyle}>Thursday</th>
-                <th style={weekDayStyle}>Friday</th>
-                <th style={weekDayStyle}>Saturday</th>
-            </tr>
-            {weeks}
+            <thead>
+                <tr style={{ height:"5%" }}>
+                    <th style={weekDayStyle}>Sunday</th>
+                    <th style={weekDayStyle}>Monday</th>
+                    <th style={weekDayStyle}>Tuesday</th>
+                    <th style={weekDayStyle}>Wednesday</th>
+                    <th style={weekDayStyle}>Thursday</th>
+                    <th style={weekDayStyle}>Friday</th>
+                    <th style={weekDayStyle}>Saturday</th>
+                </tr>
+            </thead>
+            <tbody>
+                {weeks}
+            </tbody>
         </table>
     );
 }

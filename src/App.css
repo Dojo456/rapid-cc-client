@@ -9,7 +9,7 @@ body
     box-sizing: border-box;
 }
 
-html, body, #root, .App
+html, body, #root, .Page
 {
     height: 100%;
 }
