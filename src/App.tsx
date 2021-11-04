@@ -1,23 +1,7 @@
-import ReactDOM from 'react-dom';
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
-import { BrowserRouter as Router, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import { Home } from './calendar/home';
-import { Login } from './login/login';
-
-function onSuccessfulLogin(resp: GoogleLoginResponse | GoogleLoginResponseOffline) {
-  const user = resp
-
-  ReactDOM.render(
-  <Redirect to="/home"/>,
-  document.getElementById("root"))
-}
-
-function onFailedLogin(error: any) {
-  console.log(error)
-
-  return (<Redirect to="/"/>)
-}
+import Home from './calendar/home';
+import Login from './login/login';
 
 function App() {
   return (
@@ -25,10 +9,10 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/">
-            <Login onFailureResponse={onFailedLogin} onSuccessResponse={onSuccessfulLogin}/>
+            <Login />
           </Route>
           <Route path="/home">
-            <Home/>
+            <Home />
           </Route>
         </Switch>
       </Router>

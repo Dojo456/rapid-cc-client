@@ -1,28 +1,47 @@
 import React from "react";
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
+import { RouteComponentProps, useHistory, useLocation, withRouter } from "react-router-dom";
 
 const clientID = "436668816969-5q7pmlbtcan1rvs3lqr85kdlrvkdngui.apps.googleusercontent.com"
 
-interface LoginPageProps {
-    onSuccessResponse: (resp: GoogleLoginResponse | GoogleLoginResponseOffline) => void,
-    onFailureResponse: (error: any) => void
-}
+class Login extends React.Component<RouteComponentProps> {
+    onSuccessfulLogin(resp: GoogleLoginResponse | GoogleLoginResponseOffline) {
+        const user = resp
+        console.log(user)
 
-export class Login extends React.Component<LoginPageProps> {
+        const path = "/home"
+        this.props.history.push(path, { from: "Login" })
+    }
+
+    onFailedLogin(error: any) {
+        console.log(error)
+
+        const path = "/"
+        this.props.history.push(path)
+    }
+
+    constructor(props: any) {
+        super(props)
+
+        this.onSuccessfulLogin = this.onSuccessfulLogin.bind(this)
+        this.onFailedLogin = this.onFailedLogin.bind(this)
+    }
+
     render() {
         return (
             <div className="Page">
-                  <div style={{ display:"contents", margin:"auto" }}>
-                    <GoogleLogin 
-                    clientId={clientID}
-                    buttonText="Login"
-                    onSuccess={this.props.onSuccessResponse}
-                    onFailure={this.props.onFailureResponse}
-                    isSignedIn={true}
-                    cookiePolicy={'single_host_origin'}
+                <div style={{ display: "contents", margin: "auto" }}>
+                    <GoogleLogin
+                        clientId={clientID}
+                        buttonText="Login"
+                        onSuccess={this.onSuccessfulLogin}
+                        onFailure={this.onFailedLogin}
+                        cookiePolicy={'single_host_origin'}
                     />
-                </div> 
+                </div>
             </div>
         )
     }
 }
+
+export default withRouter(Login)
