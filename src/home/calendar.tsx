@@ -1,7 +1,12 @@
 import React, { CSSProperties } from "react"
+import { CalendarEvent } from "../models/event";
 import { CalendarDate } from "./date";
 
-export class Calendar extends React.Component {
+interface CalendarProps {
+    events: CalendarEvent[]
+}
+
+export class Calendar extends React.Component<CalendarProps> {
     render() {
         return (
         <div style={{ width: "100%", height: "100%", backgroundColor:"lightgray", overflow: "hidden" }}>

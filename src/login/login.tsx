@@ -1,13 +1,19 @@
 import React from "react";
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
-import { RouteComponentProps, useHistory, useLocation, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
 
 const clientID = "436668816969-5q7pmlbtcan1rvs3lqr85kdlrvkdngui.apps.googleusercontent.com"
 
 class Login extends React.Component<RouteComponentProps> {
+    static contextType = AuthContext;
+
     onSuccessfulLogin(resp: GoogleLoginResponse | GoogleLoginResponseOffline) {
-        const user = resp
+        const user = resp as GoogleLoginResponse
         console.log(user)
+
+        const AuthProvider: AuthProviderContext = this.context
+        AuthProvider.login(user)
 
         const path = "/home"
         this.props.history.push(path, { from: "Login" })
@@ -32,6 +38,7 @@ class Login extends React.Component<RouteComponentProps> {
             <div className="Page">
                 <div style={{ display: "contents", margin: "auto" }}>
                     <GoogleLogin
+                        accessType="online"
                         clientId={clientID}
                         buttonText="Login"
                         onSuccess={this.onSuccessfulLogin}

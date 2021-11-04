@@ -24,7 +24,7 @@ export class CalendarDate extends React.Component<DateProps, DateState> {
                 <p style={{ margin:"0", height:"35%" }}>{this.props.date.getDate()}</p>
                 <ul style={{overflow:"auto", height:"65%", listStyle:"none", padding:0, margin:0 }}>
                     {this.state.events.map((event) => {
-                        const color = event.inPerson ? "lightcoral" : "lightblue"
+                        const color = event.date.getDate() === new Date().getDate() ? "lightcoral" : "lightblue"
                         return (
                         <li style={{backgroundColor: color}}>
                             {event.label}

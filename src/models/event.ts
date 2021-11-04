@@ -1,5 +1,7 @@
+import { Individual } from "./individual";
+
 export type CalendarEvent = {
     label: string,
-    attendees: string[],
-    inPerson: boolean
+    attendees: Individual[],
+    date: Date
 }
