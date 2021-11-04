@@ -1,5 +1,4 @@
 import React from "react";
-import { GoogleLoginResponse } from "react-google-login";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
 import { CalendarEvent } from "../models/event";

@@ -10,13 +10,13 @@ export class Calendar extends React.Component<CalendarProps> {
     render() {
         return (
         <div style={{ width: "100%", height: "100%", backgroundColor:"lightgray", overflow: "hidden" }}>
-            {renderCalenderDays()}
+            {renderCalenderDays(this.props.events)}
         </div>
         );
     }
 }
 
-function renderCalenderDays() {
+function renderCalenderDays(events: CalendarEvent[]) {
     const today = new Date();
     const daysPrevMonth = getLeadingDays(today);
     const daysThisMonth = getMonthDays(today);
@@ -26,22 +26,52 @@ function renderCalenderDays() {
 
     const weeks: JSX.Element[] = [];
 
+    function getDateIndex(date: Date): string {
+        return `Month:${date.getUTCMonth()}Day:${date.getUTCDate()}`
+    }
+
+    const eventMap: {[index:string] : CalendarEvent[]} = {}
+    events.forEach(event => {
+        const index = getDateIndex(event.date)
+        const dayEvents = eventMap[index]
+
+        if (!dayEvents) {
+            eventMap[index] = [event]
+        }
+        else {
+            dayEvents.push(event)
+        }
+    })
+
+    function getDayEvents(date: Date): CalendarEvent[] {
+        const index = getDateIndex(date)
+        const dayEvents = eventMap[index]
+
+        if (!dayEvents) {
+            return []
+        }
+        else {
+            return dayEvents
+        }
+    }
+
     for (let i = 0; i < 5; i++) {
         const weekDays: JSX.Element[] = []
 
         for (let j = 0; j < 7; j++) {
             const index = (i * 7) + j;
             const day = allDays[index];
+            const dayEvents = getDayEvents(day)
 
             weekDays.push(
                 <td key={j} style={{ backgroundColor:"white" }}>
-                    <CalendarDate date={day}></CalendarDate>
+                    <CalendarDate date={day} events={dayEvents}></CalendarDate>
                 </td>
             )
         }
 
         weeks.push(
-            <tr key={i}>
+            <tr key={i} style={{ height:"19%" }}>
                 {weekDays}
             </tr>
         )
@@ -96,8 +126,8 @@ function getMonthDays(date: Date) {
 function getTrailingDays(date: Date, leadingDays: Date[], monthDays: Date[]) {
     const ret = [];
     const year = date.getFullYear();
-    const month = date.getMonth();
-    const days = 42 - (leadingDays.length + monthDays.length);
+    const month = date.getMonth() + 1;
+    const days = 35 - (leadingDays.length + monthDays.length);
     for (let i = 1; i <= days; i++) ret.push(new Date(year, month, i));
     return ret;
 }

@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 import { GoogleLoginResponse } from "react-google-login";
 
 export interface AuthProviderContext {
