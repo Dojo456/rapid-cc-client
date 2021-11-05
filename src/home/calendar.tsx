@@ -1,9 +1,9 @@
 import React, { CSSProperties } from "react"
-import { CalendarEvent } from "../models/event";
+import { EventModel } from "./models";
 import { CalendarDate } from "./date";
 
 interface CalendarProps {
-    events: CalendarEvent[]
+    events: EventModel[]
 }
 
 export class Calendar extends React.Component<CalendarProps> {
@@ -16,7 +16,7 @@ export class Calendar extends React.Component<CalendarProps> {
     }
 }
 
-function renderCalenderDays(events: CalendarEvent[]) {
+function renderCalenderDays(events: EventModel[]) {
     const today = new Date();
     const daysPrevMonth = getLeadingDays(today);
     const daysThisMonth = getMonthDays(today);
@@ -30,7 +30,7 @@ function renderCalenderDays(events: CalendarEvent[]) {
         return `Month:${date.getUTCMonth()}Day:${date.getUTCDate()}`
     }
 
-    const eventMap: {[index:string] : CalendarEvent[]} = {}
+    const eventMap: {[index:string] : EventModel[]} = {}
     events.forEach(event => {
         const index = getDateIndex(event.date)
         const dayEvents = eventMap[index]
@@ -43,7 +43,7 @@ function renderCalenderDays(events: CalendarEvent[]) {
         }
     })
 
-    function getDayEvents(date: Date): CalendarEvent[] {
+    function getDayEvents(date: Date): EventModel[] {
         const index = getDateIndex(date)
         const dayEvents = eventMap[index]
 

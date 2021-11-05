@@ -3,7 +3,7 @@ import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from "re
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
 
-const clientID = "436668816969-5q7pmlbtcan1rvs3lqr85kdlrvkdngui.apps.googleusercontent.com"
+const clientID = "436668816969-l4uica2hifv8ua5sbsaokj5dfoboje2u.apps.googleusercontent.com"
 
 class Login extends React.Component<RouteComponentProps> {
     static contextType = AuthContext;

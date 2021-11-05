@@ -1,11 +1,11 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
-import { CalendarEvent } from "../models/event";
+import { EventModel } from "./models";
 import { Calendar } from "./calendar";
 
 interface HomePageState {
-  data: CalendarEvent[]
+  data: EventModel[]
 }
 
 class Home extends React.Component<RouteComponentProps, HomePageState> {
@@ -25,6 +25,7 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
     super(props)
 
     this.signOut = this.signOut.bind(this)
+    this.fetchCalendar = this.fetchCalendar.bind(this)
     this.state = {
       data: [],
     }
@@ -48,14 +49,14 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
         <div className="Page">
           <div style={{ height: "10%", display: "flex", alignItems: "center", textAlign: "center" }}>
             <h1 style={{ display: "inline-block" }}>Rapid Contact Tracer</h1>
-            <button onClick={this.signOut} style={{ display: "inline-block", position: "absolute", right: "30px" }}>
-              Contact Trace
+            <button onClick={this.fetchCalendar} style={{ display: "inline-block", position: "absolute", right: "300px" }}>
+              Fetch Calendar
             </button>
-            <button onClick={log} style={{ display: "inline-block", position: "absolute", right: "30px" }}>
-              Log Data
+            <button onClick={this.signOut} style={{ display: "inline-block", position: "absolute", right: "30px" }}>
+              Sign Out
             </button>
           </div>
-          <p>{JSON.stringify(user.getBasicProfile())}</p>
+          <p>{JSON.stringify(user.profileObj)}</p>
           <div className='calendar' style={{ width: "80%", height: "90%", overflow: 'hidden' }}>
             <Calendar events={this.state.data}/>
           </div>
@@ -64,27 +65,41 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
     }
   }
 
-  componentDidMount() {
-    fetch("https://us-central1-poetic-tube-331012.cloudfunctions.net/getCalendar")
+  fetchCalendar() {
+    const debug = true;
+    const endpoint = debug ? "http://localhost:8080/getCalendar" :  "https://us-central1-poetic-tube-331012.cloudfunctions.net/getCalendar"
+
+    fetch(endpoint, {
+      method: "POST",
+    })
       .then(
         async (resp) => {
-          const rawData: any[] = await resp.json()
-          const data = rawData.map(event => {
-            event.date = new Date(event.date)
-
-            return event
-          })
-
-          console.log(data)
-          this.setState({
-            data: data
-          })
+          try {
+            const rawData: any[] = await resp.json()
+            const data = rawData.map(event => {
+              event.date = new Date(event.date)
+  
+              return event
+            })
+  
+            console.log(data)
+            this.setState({
+              data: data
+            })
+          } catch (error) {
+            console.error("Could not fetch calendar", error)
+          }
         },
         (reason) => {
           console.error(reason)
         }
       )
+  } 
+
+  componentDidMount() {
+    this.fetchCalendar()
   }
+    
 }
 
 export default withRouter(Home)

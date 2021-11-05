@@ -4,16 +4,19 @@ import { GoogleLoginResponse } from "react-google-login";
 export interface AuthProviderContext {
     login: (user: GoogleLoginResponse) => void,
     logout: () => void,
-    getUser: () => GoogleLoginResponse | undefined
+    getUser: () => GoogleLoginResponse | undefined,
+    isSignedIn: () => boolean
 }
 
 const AuthContext: React.Context<AuthProviderContext> = React.createContext<AuthProviderContext>({
     login: () => {},
     logout: () => {},
-    getUser: () => undefined
+    getUser: () => undefined,
+    isSignedIn: () => false
 })
 
 const storage = localStorage
+const storageKey = "user"
 
 export class AuthProvider extends React.Component {
     #user: GoogleLoginResponse | undefined
@@ -21,20 +24,38 @@ export class AuthProvider extends React.Component {
     login(user: GoogleLoginResponse) {
         this.#user = user
 
-        storage.setItem("token", user.accessToken)
+        storage.setItem(storageKey, JSON.stringify(user))
     }
 
     logout() {
-        storage.removeItem("token")
+        storage.removeItem(storageKey)
     }
 
     getUser(): GoogleLoginResponse | undefined {
-        return this.#user
+        const data = storage.getItem(storageKey)
+
+        if (data !== null) {
+            return JSON.parse(data)
+        }
+        else {
+            return undefined
+        }
+    }
+
+    isSignedIn(): boolean {
+        const data = storage.getItem("user")
+
+        if (data !== null) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     render() {
         return(
-            <AuthContext.Provider value={{ login: this.login, logout: this.logout, getUser: this.getUser }}>
+            <AuthContext.Provider value={{ login: this.login, logout: this.logout, getUser: this.getUser, isSignedIn: this.isSignedIn }}>
                 {this.props.children}
             </AuthContext.Provider>
         )
@@ -47,6 +68,7 @@ export class AuthProvider extends React.Component {
         this.login = this.login.bind(this)
         this.logout = this.logout.bind(this)
         this.getUser = this.getUser.bind(this)
+        this.isSignedIn = this.isSignedIn.bind(this)
     }
 }
 
