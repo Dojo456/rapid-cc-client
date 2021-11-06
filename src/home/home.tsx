@@ -69,8 +69,19 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
     const debug = true;
     const endpoint = debug ? "http://localhost:8080/getCalendar" :  "https://us-central1-poetic-tube-331012.cloudfunctions.net/getCalendar"
 
+    const AuthProvider: AuthProviderContext = this.context
+    const tokenObj = AuthProvider.getUser()?.tokenObj
+
+    const requestBody = {
+      id_token: JSON.stringify(tokenObj)
+    }
+
     fetch(endpoint, {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
     })
       .then(
         async (resp) => {

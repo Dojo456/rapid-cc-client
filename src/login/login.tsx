@@ -34,6 +34,16 @@ class Login extends React.Component<RouteComponentProps> {
     }
 
     render() {
+        const scopes = [
+            "profile",
+            "email",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.settings.readonly",
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.events.readonly"
+        ]
+
         return (
             <div className="Page">
                 <div style={{ display: "contents", margin: "auto" }}>
@@ -41,6 +51,8 @@ class Login extends React.Component<RouteComponentProps> {
                         accessType="online"
                         clientId={clientID}
                         buttonText="Login"
+                        scope={scopes.join(" ")}
+                        prompt="consent"
                         onSuccess={this.onSuccessfulLogin}
                         onFailure={this.onFailedLogin}
                         cookiePolicy={'single_host_origin'}
