@@ -66,7 +66,7 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
   }
 
   fetchCalendar() {
-    const debug = true;
+    const debug = false;
     const endpoint = debug ? "http://localhost:8080/getCalendar" :  "https://us-central1-poetic-tube-331012.cloudfunctions.net/getCalendar"
 
     const AuthProvider: AuthProviderContext = this.context
