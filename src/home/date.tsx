@@ -1,5 +1,4 @@
 import React from "react";
-import { isThisTypeNode } from "typescript";
 import { EventModel } from "./models";
 
 interface DateProps {

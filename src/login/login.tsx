@@ -39,9 +39,6 @@ class Login extends React.Component<RouteComponentProps> {
             "profile",
             "email",
             "https://www.googleapis.com/auth/calendar.readonly",
-            "https://www.googleapis.com/auth/calendar.events",
-            "https://www.googleapis.com/auth/calendar.settings.readonly",
-            "https://www.googleapis.com/auth/calendar",
             "https://www.googleapis.com/auth/calendar.events.readonly"
         ]
 

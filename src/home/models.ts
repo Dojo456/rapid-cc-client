@@ -5,7 +5,7 @@ export type IndividualModel = {
 
 export type EventModel = {
     label: string,
-    inPerson?: boolean,
+    inPerson: boolean,
     attendees: IndividualModel[],
     eventID: string;
     date: Date

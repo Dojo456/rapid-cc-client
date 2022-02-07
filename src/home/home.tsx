@@ -1,11 +1,13 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
-import { EventModel } from "./models";
+import { EventModel, IndividualModel } from "./models";
 import { Calendar } from "./calendar";
+import UsersList from "./users-list";
 
 interface HomePageState {
   data: EventModel[]
+  contactUsers: Set<IndividualModel>
 }
 
 class Home extends React.Component<RouteComponentProps, HomePageState> {
@@ -28,6 +30,7 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
     this.fetchCalendar = this.fetchCalendar.bind(this)
     this.state = {
       data: [],
+      contactUsers: new Set()
     }
   }
 
@@ -50,15 +53,17 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
           <div style={{ height: "10%", display: "flex", alignItems: "center", textAlign: "center" }}>
             <h1 style={{ display: "inline-block" }}>Rapid Contact Tracer</h1>
             <button onClick={this.fetchCalendar} style={{ display: "inline-block", position: "absolute", right: "300px" }}>
-              Fetch Calendar
+              Trace
             </button>
             <button onClick={this.signOut} style={{ display: "inline-block", position: "absolute", right: "30px" }}>
               Sign Out
             </button>
           </div>
-          <p>{JSON.stringify(user.profileObj)}</p>
-          <div className='calendar' style={{ width: "80%", height: "90%", overflow: 'hidden' }}>
+          <div className='calendar' style={{ position: "absolute", left: "0px", width: "80%", height: "90%", overflow: 'hidden' }}>
             <Calendar events={this.state.data}/>
+          </div>
+          <div className='users' style={{ position: "absolute", right: "0px", width: "20%", height: "90%", overflow: 'hidden' }}>
+            <UsersList users={Array.from(this.state.contactUsers)}/>
           </div>
         </div>
       );
@@ -66,7 +71,7 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
   }
 
   fetchCalendar() {
-    const debug = false;
+    const debug = true;
     const endpoint = debug ? "http://localhost:8080/getCalendar" :  "https://us-central1-poetic-tube-331012.cloudfunctions.net/getCalendar"
 
     const AuthProvider: AuthProviderContext = this.context
@@ -90,11 +95,20 @@ class Home extends React.Component<RouteComponentProps, HomePageState> {
             const data = rawData.map(event => {
               event.date = new Date(event.date)
   
-              return event
+              return event as EventModel
             })
   
             console.log(data)
+
+            const pushUsers = new Set<IndividualModel>()
+            data.forEach(event => {
+              if (event.inPerson) {
+                event.attendees.forEach(user => pushUsers.add(user))
+              }
+            })
+
             this.setState({
+              contactUsers: pushUsers,
               data: data
             })
           } catch (error) {
