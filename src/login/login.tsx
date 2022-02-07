@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import { ReactSVG } from "react-svg";
 import AuthContext, { AuthProviderContext } from "../auth/auth-provider";
 
 const clientID = "436668816969-l4uica2hifv8ua5sbsaokj5dfoboje2u.apps.googleusercontent.com"
@@ -45,8 +46,8 @@ class Login extends React.Component<RouteComponentProps> {
         ]
 
         return (
-            <div className="Page">
-                <div style={{ display: "contents", margin: "auto" }}>
+            <div className="Page" style={{display: 'flex',  justifyContent:'space-evenly', alignItems:'center', flexDirection:'column'}}>
+                <div style={{display: 'contents', margin: 'auto'}}>
                     <GoogleLogin
                         accessType="online"
                         clientId={clientID}
