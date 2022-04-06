@@ -32,6 +32,8 @@ export class AuthProvider extends React.Component {
     }
 
     getUser(): GoogleLoginResponse | undefined {
+        // TODO change this to use auth library of some sort
+
         const data = storage.getItem(storageKey)
 
         if (data !== null) {
@@ -43,6 +45,8 @@ export class AuthProvider extends React.Component {
     }
 
     isSignedIn(): boolean {
+        // TODO make this abstraction of getUser()
+
         const data = storage.getItem("user")
 
         if (data !== null) {
